@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>meantobe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="meantobe">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="meantobe">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="meantobe">
+  
+    <link rel="alternate" href="/atom.xml" title="meantobe" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">meantobe</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-tomcat" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/20/tomcat/" class="article-date">
+  <time datetime="2019-05-20T03:48:00.000Z" itemprop="datePublished">2019-05-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/20/tomcat/">Tomcat新版本Host Name Validate问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近将一个项目由Spring Cloud Finchely.M5升级到Greenwich.SR1，在灰度环境正常，而线上则在网关层报400 Bad Request。</p>
+<p>首先怀疑是特殊字符的问题，因为之前也遇到过这个问题。Tomcat 7.0.73中有一处改动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Add additional checks for valid characters to the HTTP request line parsing so invalid request lines are rejected sooner.</span><br></pre></td></tr></table></figure>
+<p>在Tomcat 7.0.76中，添加了配置项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tomcat.util.http.parser.HttpParser.requestTargetAllow=</span><br></pre></td></tr></table></figure>
+<p>之前该项目也是通过这个配置来避免400，现在为什么不行了呢？查询Tomcat文档，该配置在<a href="https://tomcat.apache.org/tomcat-8.5-doc/config/systemprops.html" target="_blank" rel="noopener">Tomcat 8</a>中已标记为deprecated，在<a href="https://tomcat.apache.org/tomcat-9.0-doc/config/systemprops.html" target="_blank" rel="noopener">Tomcat 9</a>中移除，使用<code>relaxedPathChars</code>和<code>relaxedQueryChars</code>替代。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This system property is deprecated. Use the relaxedPathChars and relaxedQueryChars attributes of the Connector instead. These attributes permit a wider range of characters to be configured as valid.</span><br></pre></td></tr></table></figure>
+<p>Spring Boot 2.0.x到2.1.x的升级中，Tomcat版本由8.5升级至9.0，因此需要配置relaxedQueryChars和relaxedPathChars。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> WebServerFactoryCustomizer&lt;TomcatServletWebServerFactory&gt; <span class="title">containerCustomizer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> EmbeddedTomcatCustomizer();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">EmbeddedTomcatCustomizer</span> <span class="keyword">implements</span> <span class="title">WebServerFactoryCustomizer</span>&lt;<span class="title">TomcatServletWebServerFactory</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">customize</span><span class="params">(TomcatServletWebServerFactory factory)</span> </span>&#123;</span><br><span class="line">        factory.addConnectorCustomizers((TomcatConnectorCustomizer) connector -&gt; &#123;</span><br><span class="line">            connector.setAttribute(<span class="string">"relaxedPathChars"</span>, <span class="string">"\"&lt;&gt;[\\]^`&#123;|&#125;"</span>);</span><br><span class="line">            connector.setAttribute(<span class="string">"relaxedQueryChars"</span>, <span class="string">"\"&lt;&gt;[\\]^`&#123;|&#125;"</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但更新后依然报400。查看服务日志，找到这样一段异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">http-nio-8080-exec-1 | INFO  | org.apache.coyote.http11.Http11Processor(175) KEY: | Error parsing HTTP request header</span><br><span class="line"> Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.</span><br><span class="line">java.lang.IllegalArgumentException: Invalid character found in the request target. The valid characters are defined in RFC 7230 and RFC 3986</span><br><span class="line">	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:467)</span><br><span class="line">	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:294)</span><br><span class="line">	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)</span><br><span class="line">	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)</span><br><span class="line">	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)</span><br><span class="line">	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)</span><br><span class="line">	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br></pre></td></tr></table></figure>
+<p>似乎是请求处理处理有问题，开启DEBUG日志，异常如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">http-nio-8080-exec-5 | DEBUG | org.apache.coyote.http11.Http11Processor(175) KEY: | The host [finance_pools] is not valid</span><br><span class="line">java.lang.IllegalArgumentException: The character [_] is never valid in a domain name.</span><br><span class="line">	at org.apache.tomcat.util.http.parser.HttpParser$DomainParseState.next(HttpParser.java:926)</span><br><span class="line">	at org.apache.tomcat.util.http.parser.HttpParser.readHostDomainName(HttpParser.java:822)</span><br><span class="line">	at org.apache.tomcat.util.http.parser.Host.parse(Host.java:71)</span><br><span class="line">	at org.apache.tomcat.util.http.parser.Host.parse(Host.java:45)</span><br><span class="line">	at org.apache.coyote.AbstractProcessor.parseHost(AbstractProcessor.java:288)</span><br><span class="line">	at org.apache.coyote.http11.Http11Processor.prepareRequest(Http11Processor.java:809)</span><br><span class="line">	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)</span><br><span class="line">	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)</span><br><span class="line">	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)</span><br><span class="line">	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)</span><br><span class="line">	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)</span><br><span class="line">	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:745)</span><br></pre></td></tr></table></figure>
+<p>原来是新版本Tomcat的域名验证 <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=62371" target="_blank" rel="noopener">62371 - Improve logging in AbstractProcessor.parseHost()</a></p>
+<p>而运维在nginx中配置的upstream名称为<code>finance_pools</code>，被tomcat拦截。对比Spring Cloud不同版本中不同的Tomcat版本。</p>
+<table>
+<thead>
+<tr>
+<th>Spring Cloud版本</th>
+<th>Spring Boot版本</th>
+<th>Tomcat版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Finchley.M5</td>
+<td>2.0.0.M7</td>
+<td>8.5.23</td>
+</tr>
+<tr>
+<td>Greenwich.SR1</td>
+<td>2.1.3.RELEASE</td>
+<td>9.0.16</td>
+</tr>
+</tbody>
+</table>
+<p>联系运维将upstream名称中的下划线去掉后正常。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>Tomcat 8 -&gt; 9时，需要将<code>tomcat.util.http.parser.HttpParser.requestTargetAllow</code>替换为relaxedQueryChars和relaxedPathChars配置。</li>
+<li>Tomcat新版本中host name validate为强制校验，因此无法使用带有下划线的host name。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/05/20/tomcat/" data-id="cjvvy9xww0000v7fajwjvsy6q" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/05/20/tomcat/">Tomcat新版本Host Name Validate问题</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 meantobe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
