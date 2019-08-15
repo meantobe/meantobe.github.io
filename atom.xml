@@ -29,8 +29,7 @@
       
         
         
-          &lt;p&gt;我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span
+          
         
       
     
@@ -52,8 +51,7 @@
       
         
         
-          &lt;p&gt;最近将一个项目由Spring Cloud Finchely.M5升级到Greenwich.SR1，在灰度环境正常，而线上则在网关层报400 Bad Request。&lt;/p&gt;
-&lt;p&gt;首先怀疑是特殊字符的问题，因为之前也遇到过这个问题。Tomcat
+          
         
       
     
