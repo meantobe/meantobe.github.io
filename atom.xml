@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>meantobe</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://meantobe.github.io/"/>
+  <updated>2019-08-15T15:29:41.433Z</updated>
+  <id>http://meantobe.github.io/</id>
+  
+  <author>
+    <name>meantobe</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>多数据源的高效归并分页排序</title>
+    <link href="http://meantobe.github.io/2019/08/15/merge_and_sort/"/>
+    <id>http://meantobe.github.io/2019/08/15/merge_and_sort/</id>
+    <published>2019-08-15T04:50:00.000Z</published>
+    <updated>2019-08-15T15:29:41.433Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Tomcat新版本Host Name Validate问题</title>
+    <link href="http://meantobe.github.io/2019/05/20/tomcat/"/>
+    <id>http://meantobe.github.io/2019/05/20/tomcat/</id>
+    <published>2019-05-20T03:48:00.000Z</published>
+    <updated>2019-05-20T06:34:15.243Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;最近将一个项目由Spring Cloud Finchely.M5升级到Greenwich.SR1，在灰度环境正常，而线上则在网关层报400 Bad Request。&lt;/p&gt;
+&lt;p&gt;首先怀疑是特殊字符的问题，因为之前也遇到过这个问题。Tomcat
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
