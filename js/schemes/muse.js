@@ -1,6 +1,6 @@
 /* global NexT, CONFIG */
 
-window.addEventListener('DOMContentLoaded', () => {
+$(document).ready(function() {
 
   var sidebarToggleLines = {
     lines: [],
@@ -8,17 +8,17 @@ window.addEventListener('DOMContentLoaded', () => {
       this.lines.push(line);
     },
     init: function() {
-      this.lines.forEach(line => {
+      this.lines.forEach(function(line) {
         line.init();
       });
     },
     arrow: function() {
-      this.lines.forEach(line => {
+      this.lines.forEach(function(line) {
         line.arrow();
       });
     },
     close: function() {
-      this.lines.forEach(line => {
+      this.lines.forEach(function(line) {
         line.close();
       });
     }
@@ -102,35 +102,43 @@ window.addEventListener('DOMContentLoaded', () => {
     init            : function() {
       sidebarToggleLines.init();
 
-      window.addEventListener('mousedown', this.mousedownHandler.bind(this));
-      window.addEventListener('mouseup', this.mouseupHandler.bind(this));
-      document.querySelector('#sidebar-dimmer').addEventListener('click', this.clickHandler.bind(this));
-      document.querySelector('.sidebar-toggle').addEventListener('click', this.clickHandler.bind(this));
-      document.querySelector('.sidebar-toggle').addEventListener('mouseenter', this.mouseEnterHandler.bind(this));
-      document.querySelector('.sidebar-toggle').addEventListener('mouseleave', this.mouseLeaveHandler.bind(this));
+      $('body')
+        .on('mousedown', this.mousedownHandler.bind(this))
+        .on('mouseup', this.mouseupHandler.bind(this));
+      $('#sidebar-dimmer').on('click', this.clickHandler.bind(this));
+      $('.sidebar-toggle')
+        .on('click', this.clickHandler.bind(this))
+        .on('mouseenter', this.mouseEnterHandler.bind(this))
+        .on('mouseleave', this.mouseLeaveHandler.bind(this));
       this.sidebarEl
         .on('touchstart', this.touchstartHandler.bind(this))
         .on('touchend', this.touchendHandler.bind(this))
-        .on('touchmove', event => {
-          event.preventDefault();
+        .on('touchmove', function(e) {
+          e.preventDefault();
         });
-      window.addEventListener('sidebar:show', this.showSidebar.bind(this));
-      window.addEventListener('sidebar:hide', this.hideSidebar.bind(this));
+
+      $(document)
+        .on('sidebar.isShowing', function() {
+          NexT.utils.isDesktop() && $('body').stop().animate(
+            isRight ? {'padding-right': SIDEBAR_WIDTH} : {'padding-left': SIDEBAR_WIDTH},
+            SIDEBAR_DISPLAY_DURATION
+          );
+        });
     },
-    mousedownHandler: function(event) {
-      mousePos.X = event.pageX;
-      mousePos.Y = event.pageY;
+    mousedownHandler: function(e) {
+      mousePos.X = e.pageX;
+      mousePos.Y = e.pageY;
     },
-    mouseupHandler: function(event) {
-      var deltaX = event.pageX - mousePos.X;
-      var deltaY = event.pageY - mousePos.Y;
-      var clickingBlankPart = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)) < 20 && $(event.target).is('.main');
-      if (this.isSidebarVisible && (clickingBlankPart || $(event.target).is('img.medium-zoom-image, .fancybox img'))) {
-        this.hideSidebar();
+    mouseupHandler: function(e) {
+      var deltaX = e.pageX - mousePos.X;
+      var deltaY = e.pageY - mousePos.Y;
+      if (this.isSidebarVisible && Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)) < 20 && $(e.target).is('.main')) {
+        this.clickHandler();
       }
     },
     clickHandler: function() {
       this.isSidebarVisible ? this.hideSidebar() : this.showSidebar();
+      this.isSidebarVisible = !this.isSidebarVisible;
     },
     mouseEnterHandler: function() {
       if (!this.isSidebarVisible) {
@@ -142,21 +150,20 @@ window.addEventListener('DOMContentLoaded', () => {
         sidebarToggleLines.init();
       }
     },
-    touchstartHandler: function(event) {
-      touchPos.X = event.originalEvent.touches[0].clientX;
-      touchPos.Y = event.originalEvent.touches[0].clientY;
+    touchstartHandler: function(e) {
+      touchPos.X = e.originalEvent.touches[0].clientX;
+      touchPos.Y = e.originalEvent.touches[0].clientY;
     },
-    touchendHandler: function(event) {
-      var deltaX = event.originalEvent.changedTouches[0].clientX - touchPos.X;
-      var deltaY = event.originalEvent.changedTouches[0].clientY - touchPos.Y;
-      var effectiveSliding = Math.abs(deltaY) < 20 && ((deltaX > 30 && isRight) || (deltaX < -30 && !isRight));
-      if (this.isSidebarVisible && effectiveSliding) {
-        this.hideSidebar();
+    touchendHandler: function(e) {
+      var deltaX = e.originalEvent.changedTouches[0].clientX - touchPos.X;
+      var deltaY = e.originalEvent.changedTouches[0].clientY - touchPos.Y;
+      if (Math.abs(deltaY) < 20 && ((deltaX > 30 && isRight) || (deltaX < -30 && !isRight))) {
+        this.clickHandler();
       }
     },
     showSidebar: function() {
-      this.isSidebarVisible = true;
       var self = this;
+      sidebarToggleLines.close();
 
       if ($.isFunction($('html').velocity)) {
         this.sidebarEl.stop().velocity({
@@ -188,29 +195,26 @@ window.addEventListener('DOMContentLoaded', () => {
         this.sidebarEl.stop().animate({
           width  : SIDEBAR_WIDTH,
           display: 'block'
-        }, SIDEBAR_DISPLAY_DURATION, () => {
+        }, SIDEBAR_DISPLAY_DURATION, function() {
           self.sidebarEl.addClass('sidebar-active');
         });
       }
 
-      sidebarToggleLines.close();
-      NexT.utils.isDesktop() && $('body').stop().animate(isRight ? {'padding-right': SIDEBAR_WIDTH} : {'padding-left': SIDEBAR_WIDTH}, SIDEBAR_DISPLAY_DURATION);
+      this.sidebarEl.trigger('sidebar.isShowing');
     },
     hideSidebar: function() {
-      this.isSidebarVisible = false;
+      NexT.utils.isDesktop() && $('body').stop().animate(isRight ? {'padding-right': 0} : {'padding-left': 0});
       this.sidebarEl.find('.motion-element').hide();
       this.sidebarEl.stop().animate({width: 0, display: 'none'}).removeClass('sidebar-active');
 
       sidebarToggleLines.init();
-      NexT.utils.isDesktop() && $('body').stop().animate(isRight ? {'padding-right': 0} : {'padding-left': 0});
 
       // Prevent adding TOC to Overview if Overview was selected when close & open sidebar.
-      var tocWrap = document.querySelector('.post-toc-wrap');
-      if (tocWrap) {
+      if ($('.post-toc-wrap')) {
         if ($('.site-overview-wrap').css('display') === 'block') {
-          tocWrap.classList.remove('motion-element');
+          $('.post-toc-wrap').removeClass('motion-element');
         } else {
-          tocWrap.classList.add('motion-element');
+          $('.post-toc-wrap').addClass('motion-element');
         }
       }
     }
@@ -218,7 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
   sidebarToggleMotion.init();
 
   function updateFooterPosition() {
-    var containerHeight = $('#footer').attr('position') ? document.querySelector('.container').height() + $('#footer').outerHeight(true) : document.querySelector('.container').height();
+    var containerHeight = $('#footer').attr('position') ? $('.container').height() + $('#footer').outerHeight(true) : $('.container').height();
     if (containerHeight < window.innerHeight) {
       $('#footer').css({ 'position': 'fixed', 'bottom': 0, 'left': 0, 'right': 0 }).attr('position', 'fixed');
     } else {
@@ -227,6 +231,5 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   updateFooterPosition();
-  window.addEventListener('resize', updateFooterPosition);
-  window.addEventListener('scroll', updateFooterPosition);
+  $(window).on('resize scroll', updateFooterPosition);
 });
