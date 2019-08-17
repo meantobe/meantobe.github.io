@@ -58,13 +58,14 @@
 </script>
 
   <meta name="description" content="最近将一个项目由Spring Cloud Finchely.M5升级到Greenwich.SR1，在灰度环境正常，而线上则在网关层报400 Bad Request。 首先怀疑是特殊字符的问题，因为之前也遇到过这个问题。Tomcat 7.0.73中有一处改动使得带有{}|等符号的查询会返回400。 1Add additional checks for valid characters to the">
+<meta name="keywords" content="Tomcat,Spring Boot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tomcat新版本Host Name Validate问题">
 <meta property="og:url" content="http://meantobe.github.io/2019/05/20/tomcat/index.html">
 <meta property="og:site_name" content="meant to be">
 <meta property="og:description" content="最近将一个项目由Spring Cloud Finchely.M5升级到Greenwich.SR1，在灰度环境正常，而线上则在网关层报400 Bad Request。 首先怀疑是特殊字符的问题，因为之前也遇到过这个问题。Tomcat 7.0.73中有一处改动使得带有{}|等符号的查询会返回400。 1Add additional checks for valid characters to the">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-20T06:34:15.243Z">
+<meta property="og:updated_time" content="2019-08-17T15:33:40.339Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tomcat新版本Host Name Validate问题">
 <meta name="twitter:description" content="最近将一个项目由Spring Cloud Finchely.M5升级到Greenwich.SR1，在灰度环境正常，而线上则在网关层报400 Bad Request。 首先怀疑是特殊字符的问题，因为之前也遇到过这个问题。Tomcat 7.0.73中有一处改动使得带有{}|等符号的查询会返回400。 1Add additional checks for valid characters to the">
@@ -172,6 +173,17 @@
         
         
           
+          <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
           <li class="menu-item menu-item-archives">
       
     
@@ -238,11 +250,21 @@
                 
               
 
-              <time title="创建时间：2019-05-20 11:48:00 / 修改时间：14:34:15" itemprop="dateCreated datePublished" datetime="2019-05-20T11:48:00+08:00">2019-05-20</time>
+              <time title="创建时间：2019-05-20 11:48:00" itemprop="dateCreated datePublished" datetime="2019-05-20T11:48:00+08:00">2019-05-20</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-17 23:33:40" itemprop="dateModified" datetime="2019-08-17T23:33:40+08:00">2019-08-17</time>
+              </span>
             
           
 
@@ -308,6 +330,14 @@
     
 
     <footer class="post-footer">
+          
+        
+        <div class="post-tags">
+            <a href="/tags/Tomcat/" rel="tag"># Tomcat</a>
+          
+            <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          
+        </div>
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
           </div>
@@ -372,6 +402,33 @@
         
           <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
         </a>
       </div>
     
