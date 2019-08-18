@@ -473,110 +473,6 @@
   </article>
 
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://meantobe.github.io/2013/10/22/trapping_rain_water/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="meantobe">
-      <meta itemprop="description" content="a coder at work.">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="meant to be">
-    </span>
-      <header class="post-header">
-
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2013/10/22/trapping_rain_water/" class="post-title-link" itemprop="url">台阶存水问题（美团南京笔试题）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2013-10-22 21:43:00" itemprop="dateCreated datePublished" datetime="2013-10-22T21:43:00+08:00">2013-10-22</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-18 16:06:44" itemprop="dateModified" datetime="2019-08-18T16:06:44+08:00">2019-08-18</time>
-              </span>
-            
-          
-
-          <br>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-            <p>题目：高低不平的台阶，问下雨时能够储存多少水。</p>
-<p>分析：</p>
-<p>（1）存水区域的边界必然是曲线由增变减的拐点，因此需要找出所有拐点。</p>
-<p>（2）如果一个拐点的高度值小于左右两个拐点的高度值，那么该点被淹没在左右两拐点的水面下，应当舍弃此点。</p>
-<p>代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">step_water</span><span class="params">(steps)</span>:</span></span><br><span class="line">    <span class="string">""" 求出台阶能够存储的水量。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        steps: 各台阶的高度。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        存储的水量</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    increasing = <span class="literal">True</span></span><br><span class="line">    inflection_point = []</span><br><span class="line">    water = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 找出台阶的所有拐点</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; len(steps) - <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">if</span> steps[i] &gt;= steps[i + <span class="number">1</span>] <span class="keyword">and</span> increasing: <span class="comment"># 由增变减的拐点，作为区间的起点和终点</span></span><br><span class="line">            increasing = <span class="literal">False</span></span><br><span class="line">            inflection_point.append(i)</span><br><span class="line">        <span class="keyword">elif</span> steps[i] &lt; steps[i + <span class="number">1</span>]:</span><br><span class="line">            increasing = <span class="literal">True</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> increasing:</span><br><span class="line">        inflection_point.append(len(step) - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 舍弃被淹没在水下的拐点</span></span><br><span class="line">    i = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; len(inflection_point) - <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">if</span> steps[inflection_point[i - <span class="number">1</span>]] &gt; steps[inflection_point[i]] &lt; steps[inflection_point[i + <span class="number">1</span>]]:</span><br><span class="line">            inflection_point.pop(i)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 遍历拐点区间，求出水量</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(inflection_point) - <span class="number">1</span>):</span><br><span class="line">        level = min(steps[inflection_point[i]], steps[inflection_point[i + <span class="number">1</span>]]) <span class="comment"># 水位</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(inflection_point[i] + <span class="number">1</span>, inflection_point[i + <span class="number">1</span>]):</span><br><span class="line">            <span class="keyword">if</span> level &gt; steps[j]:</span><br><span class="line">                water += level - steps[j]</span><br><span class="line">    <span class="keyword">return</span> water</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    steps = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>]</span><br><span class="line">    <span class="keyword">print</span> steps, step_water(steps) <span class="comment"># 0</span></span><br><span class="line">    </span><br><span class="line">    steps = [<span class="number">7</span>,<span class="number">6</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">print</span> steps, step_water(steps) <span class="comment"># 0</span></span><br><span class="line"></span><br><span class="line">    steps = [<span class="number">3</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">print</span> steps, step_water(steps) <span class="comment"># 6</span></span><br><span class="line"></span><br><span class="line">    steps = [<span class="number">4</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">7</span>]</span><br><span class="line">    <span class="keyword">print</span> steps, step_water(steps) <span class="comment"># 12</span></span><br><span class="line"></span><br><span class="line">    steps = [<span class="number">5</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">5</span>]</span><br><span class="line">    <span class="keyword">print</span> steps, step_water(steps) <span class="comment"># 10</span></span><br></pre></td></tr></table></figure>
-<p>Update-20131102：这是Twitter笔试题，参见[1]。</p>
-<p>参考资料：</p>
-<ol>
-<li><a href="http://qandwhat.apps.runkite.com/i-failed-a-twitter-interview/" target="_blank" rel="noopener">http://qandwhat.apps.runkite.com/i-failed-a-twitter-interview/</a></li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
   </section>
 
   
@@ -611,7 +507,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -636,11 +532,7 @@
         
           
         
-          
-        
-          
-        
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
