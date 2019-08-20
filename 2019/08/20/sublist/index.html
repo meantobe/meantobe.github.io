@@ -58,14 +58,14 @@
 </script>
 
   <meta name="description" content="Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下： 12345static volatile CopyOnWriteArrayList&amp;lt;Info&amp;gt;&amp;gt; FULL_LIST = new CopyOnWriteArrayList&amp;lt;&amp;gt;();List&amp;lt;Info&amp;gt; getList(int">
-<meta name="keywords" content="java">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CopyOnWriteArrayList的线程安全问题——以subList为例">
 <meta property="og:url" content="http://meantobe.github.io/2019/08/20/sublist/index.html">
 <meta property="og:site_name" content="meant to be">
 <meta property="og:description" content="Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下： 12345static volatile CopyOnWriteArrayList&amp;lt;Info&amp;gt;&amp;gt; FULL_LIST = new CopyOnWriteArrayList&amp;lt;&amp;gt;();List&amp;lt;Info&amp;gt; getList(int">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-20T10:01:32.802Z">
+<meta property="og:updated_time" content="2019-08-20T10:08:08.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CopyOnWriteArrayList的线程安全问题——以subList为例">
 <meta name="twitter:description" content="Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下： 12345static volatile CopyOnWriteArrayList&amp;lt;Info&amp;gt;&amp;gt; FULL_LIST = new CopyOnWriteArrayList&amp;lt;&amp;gt;();List&amp;lt;Info&amp;gt; getList(int">
@@ -250,7 +250,7 @@
                 
               
 
-              <time title="创建时间：2019-08-20 17:49:09 / 修改时间：18:01:32" itemprop="dateCreated datePublished" datetime="2019-08-20T17:49:09+08:00">2019-08-20</time>
+              <time title="创建时间：2019-08-20 17:49:09 / 修改时间：18:08:08" itemprop="dateCreated datePublished" datetime="2019-08-20T17:49:09+08:00">2019-08-20</time>
             </span>
           
             
@@ -294,7 +294,7 @@
           
         
         <div class="post-tags">
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
         <div class="post-nav">
