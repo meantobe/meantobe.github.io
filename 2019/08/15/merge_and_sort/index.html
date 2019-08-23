@@ -57,18 +57,18 @@
   };
 </script>
 
-  <meta name="description" content="我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下： 1/user/holding/list?userId=&amp;#123;&amp;#125;&amp;amp;pageNo=&amp;#123;&amp;#125;&amp;amp;rows=&amp;#123;&amp;#125; 查询数据库时需要几个连表操作，较为复杂，不过能够满足分页查询的效率。 多数据源归并分页，第一个实现（有bug）产品提了一个需求，想要把另">
+  <meta name="description" content="摘要：  通过传递排序字段进行分页的策略及不足。 通过Redis Sorted Set进行分页的策略及问题。 通过覆盖索引分页后取数的策略。">
 <meta name="keywords" content="SQL,Redis,API Design">
 <meta property="og:type" content="article">
 <meta property="og:title" content="多数据源的高效归并分页排序">
 <meta property="og:url" content="http://meantobe.github.io/2019/08/15/merge_and_sort/index.html">
 <meta property="og:site_name" content="meant to be">
-<meta property="og:description" content="我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下： 1/user/holding/list?userId=&amp;#123;&amp;#125;&amp;amp;pageNo=&amp;#123;&amp;#125;&amp;amp;rows=&amp;#123;&amp;#125; 查询数据库时需要几个连表操作，较为复杂，不过能够满足分页查询的效率。 多数据源归并分页，第一个实现（有bug）产品提了一个需求，想要把另">
+<meta property="og:description" content="摘要：  通过传递排序字段进行分页的策略及不足。 通过Redis Sorted Set进行分页的策略及问题。 通过覆盖索引分页后取数的策略。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-17T15:37:37.511Z">
+<meta property="og:updated_time" content="2019-08-23T03:48:22.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多数据源的高效归并分页排序">
-<meta name="twitter:description" content="我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下： 1/user/holding/list?userId=&amp;#123;&amp;#125;&amp;amp;pageNo=&amp;#123;&amp;#125;&amp;amp;rows=&amp;#123;&amp;#125; 查询数据库时需要几个连表操作，较为复杂，不过能够满足分页查询的效率。 多数据源归并分页，第一个实现（有bug）产品提了一个需求，想要把另">
+<meta name="twitter:description" content="摘要：  通过传递排序字段进行分页的策略及不足。 通过Redis Sorted Set进行分页的策略及问题。 通过覆盖索引分页后取数的策略。">
   <link rel="alternate" href="/atom.xml" title="meant to be" type="application/atom+xml">
   <link rel="canonical" href="http://meantobe.github.io/2019/08/15/merge_and_sort/">
 
@@ -263,7 +263,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-17 23:37:37" itemprop="dateModified" datetime="2019-08-17T23:37:37+08:00">2019-08-17</time>
+                <time title="修改时间：2019-08-23 11:48:22" itemprop="dateModified" datetime="2019-08-23T11:48:22+08:00">2019-08-23</time>
               </span>
             
           
@@ -289,7 +289,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下：</p>
+        <p>摘要：</p>
+<ol>
+<li>通过传递排序字段进行分页的策略及不足。</li>
+<li>通过Redis Sorted Set进行分页的策略及问题。</li>
+<li>通过覆盖索引分页后取数的策略。</li>
+</ol>
+<a id="more"></a>
+<p>我们的用户持仓接口原本很简单，从一张单独的表A中做分页查询，按时间倒序排列，接口形式如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/user/holding/list?userId=&#123;&#125;&amp;pageNo=&#123;&#125;&amp;rows=&#123;&#125;</span><br></pre></td></tr></table></figure>
 <p>查询数据库时需要几个连表操作，较为复杂，不过能够满足分页查询的效率。</p>
 <h2 id="多数据源归并分页，第一个实现（有bug）"><a href="#多数据源归并分页，第一个实现（有bug）" class="headerlink" title="多数据源归并分页，第一个实现（有bug）"></a>多数据源归并分页，第一个实现（有bug）</h2><p>产品提了一个需求，想要把另一类用户持仓放在一起展示。从表B中取出数据，排序规则相同，按时间倒序。</p>

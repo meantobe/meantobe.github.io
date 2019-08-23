@@ -57,18 +57,18 @@
   };
 </script>
 
-  <meta name="description" content="Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下： 12345static volatile CopyOnWriteArrayList&amp;lt;Info&amp;gt;&amp;gt; FULL_LIST = new CopyOnWriteArrayList&amp;lt;&amp;gt;();List&amp;lt;Info&amp;gt; getList(int">
+  <meta name="description" content="摘要：  CopyOnWriteArrayList的subList仅是原始列表的视图，原始列表修改后会出现ConcurrentModificationException问题。 对CopyOnWriteArrayList的subList任何操作都需要获取读锁，效率低于ImmutableList。">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CopyOnWriteArrayList的subList问题">
 <meta property="og:url" content="http://meantobe.github.io/2019/08/20/sublist/index.html">
 <meta property="og:site_name" content="meant to be">
-<meta property="og:description" content="Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下： 12345static volatile CopyOnWriteArrayList&amp;lt;Info&amp;gt;&amp;gt; FULL_LIST = new CopyOnWriteArrayList&amp;lt;&amp;gt;();List&amp;lt;Info&amp;gt; getList(int">
+<meta property="og:description" content="摘要：  CopyOnWriteArrayList的subList仅是原始列表的视图，原始列表修改后会出现ConcurrentModificationException问题。 对CopyOnWriteArrayList的subList任何操作都需要获取读锁，效率低于ImmutableList。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-23T03:36:10.263Z">
+<meta property="og:updated_time" content="2019-08-23T03:48:24.848Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CopyOnWriteArrayList的subList问题">
-<meta name="twitter:description" content="Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下： 12345static volatile CopyOnWriteArrayList&amp;lt;Info&amp;gt;&amp;gt; FULL_LIST = new CopyOnWriteArrayList&amp;lt;&amp;gt;();List&amp;lt;Info&amp;gt; getList(int">
+<meta name="twitter:description" content="摘要：  CopyOnWriteArrayList的subList仅是原始列表的视图，原始列表修改后会出现ConcurrentModificationException问题。 对CopyOnWriteArrayList的subList任何操作都需要获取读锁，效率低于ImmutableList。">
   <link rel="alternate" href="/atom.xml" title="meant to be" type="application/atom+xml">
   <link rel="canonical" href="http://meantobe.github.io/2019/08/20/sublist/">
 
@@ -263,7 +263,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-23 11:36:10" itemprop="dateModified" datetime="2019-08-23T11:36:10+08:00">2019-08-23</time>
+                <time title="修改时间：2019-08-23 11:48:24" itemprop="dateModified" datetime="2019-08-23T11:48:24+08:00">2019-08-23</time>
               </span>
             
           
@@ -289,7 +289,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下：</p>
+        <p>摘要：</p>
+<ol>
+<li>CopyOnWriteArrayList的subList仅是原始列表的视图，原始列表修改后会出现ConcurrentModificationException问题。</li>
+<li>对CopyOnWriteArrayList的subList任何操作都需要获取读锁，效率低于ImmutableList。</li>
+</ol>
+<a id="more"></a>
+<p>Review代码时发现同事写了一段加载缓存并从缓存中获取部分数据的逻辑，使用CopyOnWriteArrayList实现，代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">volatile</span> CopyOnWriteArrayList&lt;Info&gt;&gt; FULL_LIST = <span class="keyword">new</span> CopyOnWriteArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="function">List&lt;Info&gt; <span class="title">getList</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> FULL_LIST.subList(start, end);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>更新缓存时对CopyOnWriteArrayList进行操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">updateCache</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// some logic</span></span><br><span class="line">    FULL_LIST.add(...);</span><br><span class="line">    FULL_LIST.remove(...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这几个方法（<code>add</code>, <code>remove</code>, <code>subList</code>）都会获取<code>ReentrantLock</code>，看起来似乎没什么问题。但是写一个例子就会发现对subList操作时可能会抛出异常：</p>
