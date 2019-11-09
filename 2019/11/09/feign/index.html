@@ -65,7 +65,7 @@
 <meta property="og:site_name" content="meant to be">
 <meta property="og:description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Spring Cloud OpenFeign的Greenwich.SR2修复+号在query string中未encode问题。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-09T09:25:12.943Z">
+<meta property="og:updated_time" content="2019-11-09T09:39:25.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud OpenFeign的两个问题">
 <meta name="twitter:description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Spring Cloud OpenFeign的Greenwich.SR2修复+号在query string中未encode问题。">
@@ -250,7 +250,7 @@
                 
               
 
-              <time title="创建时间：2019-11-09 17:19:35 / 修改时间：17:25:12" itemprop="dateCreated datePublished" datetime="2019-11-09T17:19:35+08:00">2019-11-09</time>
+              <time title="创建时间：2019-11-09 17:19:35 / 修改时间：17:39:25" itemprop="dateCreated datePublished" datetime="2019-11-09T17:19:35+08:00">2019-11-09</time>
             </span>
           
             
@@ -287,11 +287,12 @@
 <a id="more"></a>
 <h1 id="Feign与OpenFeign"><a href="#Feign与OpenFeign" class="headerlink" title="Feign与OpenFeign"></a>Feign与OpenFeign</h1><p><a href="https://github.com/OpenFeign/feign" target="_blank" rel="noopener">Feign</a>是Netflix开源的一个声明式HTTP客户端，9.0起迁移至OpenFeign，简要的历史可见 <a href="https://github.com/OpenFeign/feign/issues/373" target="_blank" rel="noopener">Move to a new org</a> 。</p>
 <p>Spring Cloud中和Feign相关的代码原在Spring Cloud Netflix项目内。在Finchley.M7（Spring Cloud Netflix 2.0.0.M7）版本中，Feign相关的代码迁移到一个新项目Spring Cloud OpenFeign内。即<code>org.springframework.cloud.netflix.feign</code>相关代码改为<code>org.springframework.cloud.openfeign</code>。</p>
-<h1 id="Spring-OpenFeign的两个问题"><a href="#Spring-OpenFeign的两个问题" class="headerlink" title="Spring OpenFeign的两个问题"></a>Spring OpenFeign的两个问题</h1><h2 id="Model作为Query-Map的支持"><a href="#Model作为Query-Map的支持" class="headerlink" title="Model作为Query Map的支持"></a>Model作为Query Map的支持</h2><p>Feign支持Model转换为QueryMap（9.7.0之后可以设置encode: <a href="https://github.com/OpenFeign/feign/pull/667" target="_blank" rel="noopener">https://github.com/OpenFeign/feign/pull/667</a> ），但是Feign的<code>@QueryMap</code>注解由于缺少<code>value</code>字段，在Spring Cloud OpenFeign中并不支持。</p>
+<h1 id="Spring-OpenFeign的若干问题"><a href="#Spring-OpenFeign的若干问题" class="headerlink" title="Spring OpenFeign的若干问题"></a>Spring OpenFeign的若干问题</h1><h2 id="Model作为Query-Map的支持"><a href="#Model作为Query-Map的支持" class="headerlink" title="Model作为Query Map的支持"></a>Model作为Query Map的支持</h2><p>Feign支持Model转换为QueryMap（9.7.0之后可以设置encode: <a href="https://github.com/OpenFeign/feign/pull/667" target="_blank" rel="noopener">https://github.com/OpenFeign/feign/pull/667</a> ），但是Feign的<code>@QueryMap</code>注解由于缺少<code>value</code>字段，在Spring Cloud OpenFeign中并不支持。</p>
 <p>Spring Cloud OpenFeign的2.1.x版本中增加<code>@SpringQueryMap</code>注解。</p>
-<h2 id="Feign对Query-String中特殊字符的encode"><a href="#Feign对Query-String中特殊字符的encode" class="headerlink" title="Feign对Query String中特殊字符的encode"></a>Feign对Query String中特殊字符的encode</h2><p>Feign 10.x中出现一个新问题：对query string未将+号转换为%2B，在10.2.0版本中修复（<a href="https://github.com/OpenFeign/feign/pull/882" target="_blank" rel="noopener">Adding URI segment specific encoding</a>）。</p>
+<h2 id="Feign对Query-String特殊字符的encode"><a href="#Feign对Query-String特殊字符的encode" class="headerlink" title="Feign对Query String特殊字符的encode"></a>Feign对Query String特殊字符的encode</h2><p>Feign 10.x引入一个新问题：对query string未将+好转换为%2B，在10.2.0版本中修复（<a href="https://github.com/OpenFeign/feign/pull/882" target="_blank" rel="noopener">Adding URI segment specific encoding</a>）。</p>
 <p>Spring Cloud OpenFeign 2.1.2版本升级到Feign 10.3.0，修复该问题。</p>
-<p>总结：目前（2019.11.09）使用Spring Cloud Greenwich.SR2可以避免以上两个已知问题。</p>
+<h2 id="在继承Feign接口时使用Sentinel出现空指针"><a href="#在继承Feign接口时使用Sentinel出现空指针" class="headerlink" title="在继承Feign接口时使用Sentinel出现空指针"></a>在继承Feign接口时使用Sentinel出现空指针</h2><p>Spring Cloud Alibaba的一个问题，详情见 <a href="https://github.com/alibaba/spring-cloud-alibaba/issues/626" target="_blank" rel="noopener">Feign with Sentinel in Inheritance interface will throw NPE</a>，在新版本中修复了这个问题。</p>
+<p>总结：目前（2019.11.09）使用Spring Cloud Greenwich.SR2可以避免上面两个已知问题，Spring Cloud Alibaba的问题也在最新版（2.1.0.RELEASE）解决。</p>
 
     </div>
 
@@ -451,7 +452,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Feign与OpenFeign"><span class="nav-number">1.</span> <span class="nav-text">Feign与OpenFeign</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-OpenFeign的两个问题"><span class="nav-number">2.</span> <span class="nav-text">Spring OpenFeign的两个问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Model作为Query-Map的支持"><span class="nav-number">2.1.</span> <span class="nav-text">Model作为Query Map的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feign对Query-String中特殊字符的encode"><span class="nav-number">2.2.</span> <span class="nav-text">Feign对Query String中特殊字符的encode</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Feign与OpenFeign"><span class="nav-number">1.</span> <span class="nav-text">Feign与OpenFeign</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-OpenFeign的若干问题"><span class="nav-number">2.</span> <span class="nav-text">Spring OpenFeign的若干问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Model作为Query-Map的支持"><span class="nav-number">2.1.</span> <span class="nav-text">Model作为Query Map的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feign对Query-String特殊字符的encode"><span class="nav-number">2.2.</span> <span class="nav-text">Feign对Query String特殊字符的encode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在继承Feign接口时使用Sentinel出现空指针"><span class="nav-number">2.3.</span> <span class="nav-text">在继承Feign接口时使用Sentinel出现空指针</span></a></li></ol></li></ol></div>
             
 
           </div>
