@@ -57,18 +57,18 @@
   };
 </script>
 
-  <meta name="description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Spring Cloud OpenFeign在Greenwich.SR2修复+号在query string中未encode问题。 Spring Cloud Alibaba在2.1.0.RELEASE修复Feign接口继承时产生的空指针。">
+  <meta name="description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Feign 10.2.0（Spring Cloud Greenwich.SR2）修复+号在query string中未encode问题。 Feign 10.3.0（Spring Cloud Greenwich.SR4）支持model继承。 Spring Cloud Alibaba">
 <meta name="keywords" content="Spring Cloud,Feign">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud OpenFeign的几个问题">
 <meta property="og:url" content="http://meantobe.github.io/2019/11/09/feign/index.html">
 <meta property="og:site_name" content="meant to be">
-<meta property="og:description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Spring Cloud OpenFeign在Greenwich.SR2修复+号在query string中未encode问题。 Spring Cloud Alibaba在2.1.0.RELEASE修复Feign接口继承时产生的空指针。">
+<meta property="og:description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Feign 10.2.0（Spring Cloud Greenwich.SR2）修复+号在query string中未encode问题。 Feign 10.3.0（Spring Cloud Greenwich.SR4）支持model继承。 Spring Cloud Alibaba">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-20T10:19:13.741Z">
+<meta property="og:updated_time" content="2019-11-20T10:22:56.430Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud OpenFeign的几个问题">
-<meta name="twitter:description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Spring Cloud OpenFeign在Greenwich.SR2修复+号在query string中未encode问题。 Spring Cloud Alibaba在2.1.0.RELEASE修复Feign接口继承时产生的空指针。">
+<meta name="twitter:description" content="摘要：  Spring Cloud OpenFeign自Greenwich起支持query map声明为model。 Feign 10.2.0（Spring Cloud Greenwich.SR2）修复+号在query string中未encode问题。 Feign 10.3.0（Spring Cloud Greenwich.SR4）支持model继承。 Spring Cloud Alibaba">
   <link rel="alternate" href="/atom.xml" title="meant to be" type="application/atom+xml">
   <link rel="canonical" href="http://meantobe.github.io/2019/11/09/feign/">
 
@@ -263,7 +263,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-20 18:19:13" itemprop="dateModified" datetime="2019-11-20T18:19:13+08:00">2019-11-20</time>
+                <time title="修改时间：2019-11-20 18:22:56" itemprop="dateModified" datetime="2019-11-20T18:22:56+08:00">2019-11-20</time>
               </span>
             
           
@@ -292,8 +292,9 @@
         <p>摘要：</p>
 <ol>
 <li>Spring Cloud OpenFeign自Greenwich起支持query map声明为model。</li>
-<li>Spring Cloud OpenFeign在Greenwich.SR2修复+号在query string中未encode问题。</li>
-<li>Spring Cloud Alibaba在2.1.0.RELEASE修复Feign接口继承时产生的空指针。</li>
+<li>Feign 10.2.0（Spring Cloud Greenwich.SR2）修复+号在query string中未encode问题。</li>
+<li>Feign 10.3.0（Spring Cloud Greenwich.SR4）支持model继承。</li>
+<li>Spring Cloud Alibaba 2.1.0.RELEASE修复Feign接口继承时产生的空指针。</li>
 </ol>
 <a id="more"></a>
 <h1 id="Feign与OpenFeign"><a href="#Feign与OpenFeign" class="headerlink" title="Feign与OpenFeign"></a>Feign与OpenFeign</h1><p><a href="https://github.com/OpenFeign/feign" target="_blank" rel="noopener">Feign</a>是Netflix开源的一个声明式HTTP客户端，9.0起迁移至OpenFeign，简要的历史可见 <a href="https://github.com/OpenFeign/feign/issues/373" target="_blank" rel="noopener">Move to a new org</a> 。</p>
