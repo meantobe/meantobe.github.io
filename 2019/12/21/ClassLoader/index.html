@@ -57,19 +57,19 @@
   };
 </script>
 
-  <meta name="description" content="一个线上服务偶尔卡顿，分析发现是loadClass导致线上服务卡顿，而loadClass的原因与Feign配置有关。">
-<meta name="keywords" content="Java,Feign">
+  <meta name="description" content="一个线上服务偶尔卡顿，分析发现是loadClass导致的线程阻塞，而loadClass的原因与Feign配置有关。">
+<meta name="keywords" content="Feign,Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="loadClass导致线上服务卡顿分析">
 <meta property="og:url" content="http://meantobe.github.io/2019/12/21/ClassLoader/index.html">
 <meta property="og:site_name" content="meant to be">
-<meta property="og:description" content="一个线上服务偶尔卡顿，分析发现是loadClass导致线上服务卡顿，而loadClass的原因与Feign配置有关。">
+<meta property="og:description" content="一个线上服务偶尔卡顿，分析发现是loadClass导致的线程阻塞，而loadClass的原因与Feign配置有关。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://meantobe.github.io/images/4D8DB8BE6AA05C097954FCBFF8B43EBB.jpg">
-<meta property="og:updated_time" content="2019-12-21T05:14:11.128Z">
+<meta property="og:updated_time" content="2019-12-21T05:26:23.040Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="loadClass导致线上服务卡顿分析">
-<meta name="twitter:description" content="一个线上服务偶尔卡顿，分析发现是loadClass导致线上服务卡顿，而loadClass的原因与Feign配置有关。">
+<meta name="twitter:description" content="一个线上服务偶尔卡顿，分析发现是loadClass导致的线程阻塞，而loadClass的原因与Feign配置有关。">
 <meta name="twitter:image" content="http://meantobe.github.io/images/4D8DB8BE6AA05C097954FCBFF8B43EBB.jpg">
   <link rel="alternate" href="/atom.xml" title="meant to be" type="application/atom+xml">
   <link rel="canonical" href="http://meantobe.github.io/2019/12/21/ClassLoader/">
@@ -252,7 +252,7 @@
                 
               
 
-              <time title="创建时间：2019-12-21 12:15:50 / 修改时间：13:14:11" itemprop="dateCreated datePublished" datetime="2019-12-21T12:15:50+08:00">2019-12-21</time>
+              <time title="创建时间：2019-12-21 12:15:50 / 修改时间：13:26:23" itemprop="dateCreated datePublished" datetime="2019-12-21T12:15:50+08:00">2019-12-21</time>
             </span>
           
             
@@ -281,9 +281,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>一个线上服务偶尔卡顿，分析发现是loadClass导致线上服务卡顿，而loadClass的原因与Feign配置有关。</p>
+        <p>一个线上服务偶尔卡顿，分析发现是loadClass导致的线程阻塞，而loadClass的原因与Feign配置有关。</p>
 <a id="more"></a>
-<h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p>最近线上的一个服务偶尔出现卡顿，表现为不特定时刻出现几分钟的卡顿，在这段时间内响应时间激增，如图：</p>
+<h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p>最近线上的一个服务偶尔出现卡顿，表现为不特定时刻出现几分钟的异常，在这段时间内响应时间激增，如图：</p>
 <p><img src="/images/4D8DB8BE6AA05C097954FCBFF8B43EBB.jpg" alt="IMAGE"></p>
 <h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>首先查看日志，找到慢请求，发现主要出现在服务间Feign调用前后。开启DEBUG日志，看到在Feign输出HTTP返回数据到Jackson反序列化之间，有几秒的间隔。</p>
 <p>这点很奇怪，查看GC，也没有Stop-The-World出现。打印jstack日志，发现有若干和Feign相关的线程处于BLOCKED状态：</p>
@@ -322,9 +322,9 @@
           
         
         <div class="post-tags">
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
             <a href="/tags/Feign/" rel="tag"># Feign</a>
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
         <div class="post-nav">
