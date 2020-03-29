@@ -65,7 +65,7 @@
 <meta property="og:site_name" content="meant to be">
 <meta property="og:description" content="Zuul 1.x的连接泄露问题，目前仍然存在。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-28T07:43:45.972Z">
+<meta property="og:updated_time" content="2020-03-29T03:34:54.008Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netflix Zuul连接泄露问题">
 <meta name="twitter:description" content="Zuul 1.x的连接泄露问题，目前仍然存在。">
@@ -250,11 +250,21 @@
                 
               
 
-              <time title="创建时间：2020-03-28 12:58:57 / 修改时间：15:43:45" itemprop="dateCreated datePublished" datetime="2020-03-28T12:58:57+08:00">2020-03-28</time>
+              <time title="创建时间：2020-03-28 12:58:57" itemprop="dateCreated datePublished" datetime="2020-03-28T12:58:57+08:00">2020-03-28</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-03-29 11:34:54" itemprop="dateModified" datetime="2020-03-29T11:34:54+08:00">2020-03-29</time>
+              </span>
             
           
 
@@ -308,7 +318,8 @@
 <li>网关要做到路由隔离。比如Zuul不同路由可以配置不同的连接池大小，即便某个连接不可用，也不会影响其它服务。max-total-connections一定要大于max-per-route-connections。</li>
 <li>Zuul本身的问题。从代码可以看出，如果postRoute及errorRoute抛出异常，都会导致Zuul的连接泄露。考虑到Zuul 1.x不再维护，后续不建议再使用Zuul做网关。</li>
 </ol>
-<p>这个问题我们在Spring Cloud Netflix的GitHub中提了issue：<a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/2831" target="_blank" rel="noopener">may be found a bug for httpclient connection leak #2831</a>，有国内公司也遇到过相同问题。也有人提了pull request确保连接关闭：<a href="https://github.com/spring-cloud/spring-cloud-netflix/pull/2849" target="_blank" rel="noopener">Make sure resources are disposed at request completion #2849</a>。但是由于Zuul停止维护，这个提交没有被合并，所以该问题至今仍可复现。</p>
+<p>这个问题我们在Spring Cloud Netflix的GitHub中提了issue：<a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/2831" target="_blank" rel="noopener">may be found a bug for httpclient connection leak #2831</a>，有国内公司也遇到过相同问题。</p>
+<p>解决方式是确保在postFilter和errorFilter中关闭连接，也有人提了pull request，通过注册回调的方式确保连接关闭，不再需要SendResponseFilter关闭流，详见：<a href="https://github.com/spring-cloud/spring-cloud-netflix/pull/2849" target="_blank" rel="noopener">Make sure resources are disposed at request completion #2849</a>。但是由于Zuul停止维护，这个提交没有被合并，所以该问题至今仍可复现。</p>
 
     </div>
 
