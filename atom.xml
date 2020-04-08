@@ -54,9 +54,9 @@
     </summary>
     
     
-      <category term="Java" scheme="http://meantobe.github.io/tags/Java/"/>
-    
       <category term="Feign" scheme="http://meantobe.github.io/tags/Feign/"/>
+    
+      <category term="Java" scheme="http://meantobe.github.io/tags/Java/"/>
     
   </entry>
   
@@ -96,9 +96,9 @@
     </summary>
     
     
-      <category term="Feign" scheme="http://meantobe.github.io/tags/Feign/"/>
-    
       <category term="Spring Cloud" scheme="http://meantobe.github.io/tags/Spring-Cloud/"/>
+    
+      <category term="Feign" scheme="http://meantobe.github.io/tags/Feign/"/>
     
   </entry>
   
