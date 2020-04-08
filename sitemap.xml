@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://meantobe.github.io/about/index.html</loc>
+    
+    <lastmod>2020-04-08T05:19:08.160Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://meantobe.github.io/2019/11/09/feign/</loc>
     
     <lastmod>2020-04-06T01:28:53.875Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://meantobe.github.io/2020/03/28/zuul/</loc>
     
     <lastmod>2020-03-29T07:38:07.753Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://meantobe.github.io/about/index.html</loc>
-    
-    <lastmod>2020-03-28T13:31:54.673Z</lastmod>
     
   </url>
   
