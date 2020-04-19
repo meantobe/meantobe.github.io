@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://meantobe.github.io/2020/03/28/zuul/</loc>
+    
+    <lastmod>2020-04-19T02:27:48.134Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://meantobe.github.io/about/index.html</loc>
     
-    <lastmod>2020-04-08T12:33:45.772Z</lastmod>
+    <lastmod>2020-04-08T12:34:11.782Z</lastmod>
     
   </url>
   
@@ -26,13 +33,6 @@
     <loc>http://meantobe.github.io/2019/12/11/hashids/</loc>
     
     <lastmod>2020-04-02T18:14:26.129Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://meantobe.github.io/2020/03/28/zuul/</loc>
-    
-    <lastmod>2020-03-29T07:38:07.753Z</lastmod>
     
   </url>
   
