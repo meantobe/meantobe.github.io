@@ -65,7 +65,7 @@
 <meta property="og:site_name" content="meant to be">
 <meta property="og:description" content="CopyOnWriteArrayList的subList仅是原始列表的视图，原始列表修改后操作subList会出现ConcurrentModificationException。 对CopyOnWriteArrayList的subList任何操作都需要获取读锁，更好的方式是使用不可变对象。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-02T18:22:58.479Z">
+<meta property="og:updated_time" content="2020-04-02T18:22:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CopyOnWriteArrayList的subList需要注意的点">
 <meta name="twitter:description" content="CopyOnWriteArrayList的subList仅是原始列表的视图，原始列表修改后操作subList会出现ConcurrentModificationException。 对CopyOnWriteArrayList的subList任何操作都需要获取读锁，更好的方式是使用不可变对象。">
@@ -397,6 +397,8 @@
           
         
         
+        
+          
         
           
         
